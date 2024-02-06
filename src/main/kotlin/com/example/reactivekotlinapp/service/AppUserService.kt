@@ -1,5 +1,6 @@
 package com.example.reactivekotlinapp.service
 
+import NotFoundException
 import com.example.reactivekotlinapp.model.AppUser
 import com.example.reactivekotlinapp.repository.AppUserRepository
 import org.springframework.stereotype.Service
@@ -16,5 +17,10 @@ class AppUserService(
 
     fun findById(id: Long): Mono<AppUser> =
         appUserRepository.findById(id)
+            .switchIfEmpty(
+                Mono.error(
+                    NotFoundException("User with id $id was not found :(")
+                )
+            )
 
 }
